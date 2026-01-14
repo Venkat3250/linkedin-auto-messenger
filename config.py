@@ -7,7 +7,6 @@ MESSAGE_TEXT = (
 
 EMAIL_SENDER = "mohan38719@gmail.com"
 EMAIL_RECEIVER = "mohan38719@gmail.com"
-
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 EMAIL_SUBJECT = "LinkedIn Bot Notification"
