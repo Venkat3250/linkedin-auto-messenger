@@ -61,7 +61,7 @@ def send_message(profile):
     except:
         return False
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     login()
     current = read_connections()
     saved = load_json(CONNECTIONS_FILE)
