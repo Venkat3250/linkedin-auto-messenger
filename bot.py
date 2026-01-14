@@ -48,17 +48,56 @@ def load_json(file):
 def save_json(file, data):
     json.dump(list(data), open(file, "w"), indent=2)
 
-def send_message(profile):
+def send_message(profile_url):
     try:
-        driver.get(profile)
-        time.sleep(4)
-        driver.find_element(By.XPATH, "//button[.//span[text()='Message']]").click()
+        driver.get(profile_url)
+        time.sleep(5)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
-        box = driver.find_element(By.XPATH, "//div[contains(@class,'msg-form__contenteditable')]")
-        box.send_keys(MESSAGE_TEXT)
-        driver.find_element(By.XPATH, "//button[contains(@class,'msg-form__send-button')]").click()
+
+        buttons = driver.find_elements(By.TAG_NAME, "button")
+        message_button = None
+
+        for btn in buttons:
+            if "message" in btn.text.lower():
+                message_button = btn
+                break
+
+        if not message_button:
+            for btn in buttons:
+                if "more" in btn.text.lower():
+                    btn.click()
+                    time.sleep(2)
+                    break
+
+            options = driver.find_elements(By.XPATH, "//span[text()='Message']")
+            if options:
+                options[0].click()
+                time.sleep(2)
+            else:
+                print("❌ Message button not found")
+                return False
+        else:
+            message_button.click()
+            time.sleep(2)
+
+        textbox = driver.find_element(
+            By.XPATH, "//div[contains(@class,'msg-form__contenteditable')]"
+        )
+        textbox.send_keys(MESSAGE_TEXT)
+        time.sleep(1)
+
+        send_btn = driver.find_element(
+            By.XPATH, "//button[contains(@class,'msg-form__send-button')]"
+        )
+        send_btn.click()
+
+        print("📨 Message sent →", profile_url)
         return True
-    except:
+
+    except Exception as e:
+        print("⚠️ Message failed:", profile_url)
         return False
 
 if __name__ == "__main__":
